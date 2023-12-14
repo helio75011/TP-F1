@@ -1,0 +1,25 @@
+F1 Reaction Timer
+
+Models
+
+User
+.email: request
+.password: required
+.role: Boolean (0 = admin 1 = user)
+
+Timer
+.user_id: foreign key pf the users ducument user_id
+.time: required in millesecond (ms)
+
+Routes
+./users/:user_id : Protected (PUT, PATCH, DELETE)
+./users/register : returns user email only (POST)
+./users/login : returns auth token (POST)
+./:user_id/timer : PROTECTED route to store user time (POST)
+./:user_id/timer : PROTECTED route to get all user time (GET)
+./:user_id/timer/avg : PROTECTED route t return average user timer (GET)
+
+Obligations
+gitflow
+.env for environment variables
+hash for password security

@@ -44,3 +44,42 @@ exports.login = async (req, res) => {
     res.status(500).send('Error in login');
   }
 };
+
+exports.updateUser = async (req, res) => {
+  try {
+    // Find the user by ID provided in the URL
+    let user = await User.findById(req.params.user_id);
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+
+    // Update user details
+    if (req.body.email) user.email = req.body.email;
+    if (req.body.role) user.role = req.body.role;
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.password, salt);
+    }
+
+    await user.save();
+
+    res.send({ message: 'User updated successfully', user: { email: user.email, role: user.role } });
+  } catch (error) {
+    res.status(500).send('Error in updating user');
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    // Find the user by ID provided in the URL and delete
+    const user = await User.findByIdAndDelete(req.params.user_id);
+
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+
+    res.send({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).send('Error in deleting user');
+  }
+};
